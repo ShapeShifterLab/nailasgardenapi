@@ -2,23 +2,23 @@ import Foundation
 import Vapor
 import FluentSQLite
 
-    //Lesson 5: Custom Classes as JSON Data
-    //Lesson 7.1: Posting JSON Data Returning a Future
-final class Dish: Content {
-    var id: Int?
-    var title: String
-    var description: String
-    var course: String
-    var price: Double
-    var ingredients = [Ingredient]()
-    
-    init(title: String, description: String, course: String, price: Double) {
-        self.title = title
-        self.description = description
-        self.course = course
-        self.price = price
-    }
-}
+//    //Lesson 5: Custom Classes as JSON Data
+//    //Lesson 7.1: Posting JSON Data Returning a Future
+//final class Dish: Content {
+//    var id: Int?
+//    var title: String
+//    var description: String
+//    var course: String
+//    var price: Double
+//    var ingredients = [Ingredient]()
+//    
+//    init(title: String, description: String, course: String, price: Double) {
+//        self.title = title
+//        self.description = description
+//        self.course = course
+//        self.price = price
+//    }
+//}
 
     //Lesson 7.1: Posting JSON Data Returning a Future
 final class Ingredient: Content {
@@ -162,32 +162,37 @@ public func routes(_ router: Router) throws {
 //    router.get("api/dishes", use: dishesController.getAll)
 //    router.get("api/dish", Dish.parameter, use: dishesController.getById)
 //
-//    router.post(Dish.self, at: "api/dish") { request, dish -> Future<Dish> in
-//        return dish.save(on: request)
-//    }
-//
-//    //deleting item from dishes
-//    router.delete("api/dish", Dish.parameter) { req -> Future<Dish> in
-//        try req.parameters.next(Dish.self).delete(on: req)
-//
-//    }
-//
-//
-//    router.get("api/dishes", String.parameter) { req -> Future<[Dish]> in
-//        let course = try req.parameters.next(String.self).lowercased()
-//
-//        return try Dish.query(on: req)
-//            .filter(\.course == course).all()
-//    }
-//
-//    router.get("api/dish", Dish.parameter) { req -> Future<Dish> in
-//        return try req.parameters.next(Dish.self)
-//    }
-//
-//
-//    router.get("api/dishes") { req -> Future<[Dish]> in
-//        return Dish.query(on: req).all()
-//
-//    }
+    
+    //Lesson 9 - Post New Dishes As Written in Postman App - http://localhost:8080/api/dish
+    router.post(Dish.self, at: "api/dish") { request, dish -> Future<Dish> in
+        return dish.save(on: request)
+    }
+    //Lesson 9.1 Fetch All Dishes - http://localhost:8080/api/dishes
+    router.get("api/dishes") { req -> Future<[Dish]> in
+        return Dish.query(on: req).all()
+    }
+    //Lesson 9.2 Fetch a Single Dish - http://localhost:8080/api/dish/1
+    router.get("api/dish", Dish.parameter) { req -> Future<Dish> in
+        return try req.parameters.next(Dish.self)
+    }
+    //Lesson 9.3 Fetch a Single Dish Based on the Course Type - http://localhost:8080/api/dishes/starters
+    router.get("api/dishes", String.parameter) { req -> Future<[Dish]> in
+        
+        let course = try req.parameters.next(String.self).lowercased()
+
+        return try Dish.query(on: req)
+            .filter(\.course == course).all()
+    }
+    
+
+    //Lesson 9.4 Deleting Dish from Dishes Array - http://localhost:8080/api/dish/delete/3
+    router.delete("api/dish/delete", Dish.parameter) { req -> Future<Dish> in
+        try req.parameters.next(Dish.self).delete(on: req)
+
+    }
+
+
+
+
     
 }
