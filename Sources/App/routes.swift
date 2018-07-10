@@ -20,21 +20,21 @@ import FluentSQLite
 //    }
 //}
 
-    //Lesson 7.1: Posting JSON Data Returning a Future
-final class Ingredient: Content {
-    var name: String
-    var quantity: Double
-    
-    init(name: String, quantity: Double) {
-        self.name = name
-        self.quantity = quantity
-    }
-}
+//    //Lesson 7.1: Posting JSON Data Returning a Future
+//final class Ingredient: Content {
+//    var name: String
+//    var quantity: Double
+//
+//    init(name: String, quantity: Double) {
+//        self.name = name
+//        self.quantity = quantity
+//    }
+//}
 
-    //Lesson 8.3
-struct Customer: Content {
-    var name: String
-}
+//    //Lesson 8.3
+//struct Customer: Content {
+//    var name: String
+//}
 
 /// Register your application's routes here.
 public func routes(_ router: Router) throws {
@@ -136,60 +136,57 @@ public func routes(_ router: Router) throws {
 //        })
 //    }
     
-    //Lesson 8.3: Map and FlatMap
-    router.get("customers") { request -> Future<[Customer]> in
-        return getAllCustomers(req: request)
-    }
+//    //Lesson 8.3: Map and FlatMap
+//    router.get("customers") { request -> Future<[Customer]> in
+//        return getAllCustomers(req: request)
+//    }
+//
+//    //Lesson 8.3: Map and FlatMap
+//    func getAllCustomers(req: Request) -> Future<[Customer]> {
+//
+//        return Future.flatMap(on: req) { () -> EventLoopFuture<[Customer]> in
+//
+//            var customers = [Customer(name: "john"), Customer(name: "mary")]
+//            customers[0].name = "jack"
+//
+//            return Future.map(on: req, { () -> [Customer] in
+//
+//                return customers
+//            })
+//        }
+//    }
     
-    //Lesson 8.3: Map and FlatMap
-    func getAllCustomers(req: Request) -> Future<[Customer]> {
-        
-        return Future.flatMap(on: req) { () -> EventLoopFuture<[Customer]> in
-            
-            var customers = [Customer(name: "john"), Customer(name: "mary")]
-            customers[0].name = "jack"
-            
-            return Future.map(on: req, { () -> [Customer] in
-                
-                return customers
-            })
-        }
-    }
-    
-//    let dishesController = DishesController()
+//    //Lesson 9 - Post New Dishes As Written in Postman App - http://localhost:8080/api/dish
+//    router.post(Dish.self, at: "api/dish") { request, dish -> Future<Dish> in
+//        return dish.save(on: request)
+//    }
+//    //Lesson 9.1 Fetch All Dishes - http://localhost:8080/api/dishes
+//    router.get("api/dishes") { req -> Future<[Dish]> in
+//        return Dish.query(on: req).all()
+//    }
+//    //Lesson 9.2 Fetch a Single Dish - http://localhost:8080/api/dish/1
+//    router.get("api/dish", Dish.parameter) { req -> Future<Dish> in
+//        return try req.parameters.next(Dish.self)
+//    }
+//    //Lesson 9.3 Fetch a Single Dish Based on the Course Type - http://localhost:8080/api/dishes/starters
+//    router.get("api/dishes", String.parameter) { req -> Future<[Dish]> in
+//        
+//        let course = try req.parameters.next(String.self).lowercased()
+//
+//        return try Dish.query(on: req)
+//            .filter(\.course == course).all()
+//    }
+//    //Lesson 9.4 Deleting Dish from Dishes Array - http://localhost:8080/api/dish/delete/3
+//    router.delete("api/dish/delete", Dish.parameter) { req -> Future<Dish> in
+//        try req.parameters.next(Dish.self).delete(on: req)
+//    }
+
+    //Lesson 10 Controllers
+    let dishesController = DishesController()
+    router.get("api/dishes", use: dishesController.getAll) // http://localhost:8080/api/dishes
+    router.get("api/dish", Dish.parameter, use: dishesController.getById) // http://localhost:8080/api/dish/3
 //    try router.register(collection: dishesController)
 //
-//    router.get("api/dishes", use: dishesController.getAll)
-//    router.get("api/dish", Dish.parameter, use: dishesController.getById)
-//
-    
-    //Lesson 9 - Post New Dishes As Written in Postman App - http://localhost:8080/api/dish
-    router.post(Dish.self, at: "api/dish") { request, dish -> Future<Dish> in
-        return dish.save(on: request)
-    }
-    //Lesson 9.1 Fetch All Dishes - http://localhost:8080/api/dishes
-    router.get("api/dishes") { req -> Future<[Dish]> in
-        return Dish.query(on: req).all()
-    }
-    //Lesson 9.2 Fetch a Single Dish - http://localhost:8080/api/dish/1
-    router.get("api/dish", Dish.parameter) { req -> Future<Dish> in
-        return try req.parameters.next(Dish.self)
-    }
-    //Lesson 9.3 Fetch a Single Dish Based on the Course Type - http://localhost:8080/api/dishes/starters
-    router.get("api/dishes", String.parameter) { req -> Future<[Dish]> in
-        
-        let course = try req.parameters.next(String.self).lowercased()
-
-        return try Dish.query(on: req)
-            .filter(\.course == course).all()
-    }
-    
-
-    //Lesson 9.4 Deleting Dish from Dishes Array - http://localhost:8080/api/dish/delete/3
-    router.delete("api/dish/delete", Dish.parameter) { req -> Future<Dish> in
-        try req.parameters.next(Dish.self).delete(on: req)
-
-    }
 
 
 
