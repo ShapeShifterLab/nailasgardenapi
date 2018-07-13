@@ -183,9 +183,10 @@ public func routes(_ router: Router) throws {
 
     //Lesson 10 Controllers
     let dishesController = DishesController()
-    router.get("api/dishes", use: dishesController.getAll) // http://localhost:8080/api/dishes
-    router.get("api/dish", Dish.parameter, use: dishesController.getById) // http://localhost:8080/api/dish/3
-//    try router.register(collection: dishesController)
+    //Lesson 10.3 These Routes Have been Moved into DishesController.swift
+//    router.get("api/dishes", use: dishesController.getAll) // http://localhost:8080/api/dishes
+//    router.get("api/dish", Dish.parameter, use: dishesController.getById) // http://localhost:8080/api/dish/3
+    try router.register(collection: dishesController)
 //
 
 
